@@ -77,7 +77,7 @@
                                 Statements
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="#">Coming Soon!</a>
+                            <a class="dropdown-item" href="/registered/statements">Beta Version!</a>
                             </div>
                         </div>
                     </li>

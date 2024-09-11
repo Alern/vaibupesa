@@ -43,6 +43,9 @@ Route::get('/registered/transactions/hakikisha/cancel',[\App\Http\Controllers\Re
 Route::view('/registered/updatekyc', 'pages.registeredcustomers.updatekyc');
 Route::post('/registered/updatekyc/store', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'updateKyc'])->name('/registered/updatekyc/store');
 
+Route::view('/registered/statements', 'pages.registeredcustomers.statements');
+Route::post('/registered/statements/search', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'statements'])->name('/registered/statements/search');
+
 Auth::routes();
 Route::post('/logintry',[\App\Http\Controllers\Auth\LoginController::class,'authenticate'])->name('/logintry');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

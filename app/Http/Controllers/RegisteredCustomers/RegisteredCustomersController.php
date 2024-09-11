@@ -198,4 +198,26 @@ class RegisteredCustomersController extends Controller
             }
         }
     }
+
+    public function statements(Request $request){
+
+        $phone = $request->input('phone');
+        $sdate = $request->input('startdate');
+        $edate = $request->input('enddate');
+
+        //dd($phone, $sdate, $edate);
+
+        $phone_id=DB::table('users')->where('msisdn', '=', $phone)->pluck('id')->first();
+
+        $fname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('fname')->first();
+        $lname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('lname')->first();
+
+        $transactions=DB::table('transactions')->where('sender_user_id', '=', $phone_id)->
+        orWhere('receiver_user_id', '=', $phone_id)->whereBetween('created_at', [$sdate, $edate])->get();
+
+        //dd($transactions);
+
+        return view('pages.registeredcustomers.statementsresults', compact('transactions','phone','sdate','edate','fname','lname'));
+    }
+
 }
