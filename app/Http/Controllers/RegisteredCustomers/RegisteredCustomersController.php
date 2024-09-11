@@ -5,6 +5,7 @@ namespace App\Http\Controllers\RegisteredCustomers;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\TransactionType;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -26,14 +27,15 @@ class RegisteredCustomersController extends Controller
             'amount' => 'required',
             'password' => 'required',
         );
+
         $request->validate($rules);
         $inputs2 = $request->input('receiverMsisdn');
         $inputs3 = $request->input('amount');
         $pin = $request->input('password');
 
-        $receiveruserid=DB::table('users')->where('msisdn', '=', $inputs2)->pluck('msisdn')->first();
-        $hakikishafname=DB::table('customers')->where('msisdn', '=', $receiveruserid)->pluck('fname')->first();
-        $hakikishalname=DB::table('customers')->where('msisdn', '=', $receiveruserid)->pluck('lname')->first();
+        $receiveruserid=DB::table('users')->where('msisdn', '=', $inputs2)->pluck('id')->first();
+        $hakikishafname=DB::table('customers')->where('user_id', '=', $receiveruserid)->pluck('fname')->first();
+        $hakikishalname=DB::table('customers')->where('user_id', '=', $receiveruserid)->pluck('lname')->first();
 
         if($inputs3 > 0 and $inputs3 <= 50){
             $hakikishatcost=100;
@@ -51,11 +53,11 @@ class RegisteredCustomersController extends Controller
             $hakikishatcost=500;
         }
 
-        if(Hash::check($pin, $registeredPin)) {
-            return view('pages.registeredcustomers.hakikisha', compact('hakikishafname', 'hakikishalname','inputs1','inputs2','inputs3','hakikishatcost'));
+        if((Hash::check($pin, $registeredPin)) and (User::where('msisdn', $inputs2)->exists()) ) {
+            return view('pages.registeredcustomers.hakikisha', compact('hakikishafname', 'hakikishalname','inputs1','inputs2','inputs3','hakikishatcost','receiveruserid'));
         } else{
-           // return back()->with('error', 'The provided credentials do not match our records.')->withInput();
-            return view('pages.registeredcustomers.createregistered');
+           // return view('pages.registeredcustomers.createregistered');
+            return back()->with('error', 'The provided customer details do not match our records.')->withInput();
         }
     }
 
@@ -70,14 +72,17 @@ class RegisteredCustomersController extends Controller
             'topupamnt' => 'required'
         );
         $validator = Validator::make($request->all(), $rules);
+
         if ($validator->fails()) {
             Session::flash('error', 'Validation failed, check your input!!!');
             return Redirect::to('/registered/updatekyc')
                 ->withErrors($validator);
         } else {
             // store
+            $user = auth()->user();
+            $userid=$user->id;
             $customer = new Customer;
-            $customer->user_id =
+            $customer->user_id = $userid;
             $customer->fname = $request->fname;
             $customer->lname = $request->lname;
             $customer->email = $request->email;
@@ -87,8 +92,8 @@ class RegisteredCustomersController extends Controller
             $customer->topupamnt = $request->topupamnt;
             $customer->save();
             // redirect
-            Session::flash('message', 'Successfully created a customer! Bingo!!!');
-            return Redirect::to('/customers/create');
+            Session::flash('message', 'Successfully updated your KYC! You can proceed to transact!!!');
+            return Redirect::to('/registeredcustomers/create');
         }
     }
 
@@ -98,27 +103,30 @@ class RegisteredCustomersController extends Controller
 
     public function create(Request $request)
     {
+
+        $user = auth()->user();
+        $sender_identity_id=$user->id;
+
         $sender_customer_id = $request->input('senderphone');
         $receiver_customer_id = $request->input('receiverphone');
+        $receiver_identity_id = $request->input('receiveridentity');
         $transaction_amount = $request->input('tamount');
         $transact_amount_cost = $request->input('tcost');
 
-        //dd($sender_customer_id,$receiver_customer_id,$transaction_amount,$transact_amount_cost);
+       // dd($sender_customer_id,$receiver_customer_id,$receiver_identity_id,$transaction_amount,$transact_amount_cost);
 
-        //initial query balance of the sender and receiver
-        //$sender_query_balance = Customer::where('msisdn', '=', $sender_customer_id)->pluck('topupamnt')->first();
-        //$receiver_query_balance = Customer::where('msisdn', '=', $receiver_customer_id)->pluck('topupamnt')->first();
+        $sender_query_balance=DB::table('customers')->where('user_id', '=', $receiver_identity_id)->pluck('topupamnt')->first();
+        $receiver_query_balance=DB::table('customers')->where('user_id', '=', $sender_identity_id)->pluck('topupamnt')->first();
 
-        $sender_query_balance=DB::table('users')->where('msisdn', '=', $sender_customer_id)->pluck('topupamnt')->first();
-        $receiver_query_balance=DB::table('customers')->where('msisdn', '=', $receiver_customer_id)->pluck('topupamnt')->first();
-
-
+        //dd($sender_query_balance, $receiver_query_balance);
 
         //get receiver kyc for verification
-        $receiver_query_kyc = Customer::where('msisdn', '=', $receiver_customer_id)->sum('msisdn');
+        $receiver_query_kyc = User::where('id', '=', $receiver_identity_id)->pluck('msisdn')->first();
         $transaction_type_id = TransactionType::where('tname', '=', 'Send Cash')->sum('id');
         $random = Str::random(10);
         $randomId = rand(1000,9999);
+
+       // dd($receiver_query_kyc,$transaction_type_id,$randomId);
 
 
 
@@ -129,7 +137,7 @@ class RegisteredCustomersController extends Controller
         $new_receiver_balance= $receiver_query_balance + $transaction_amount;
         $new_sender_balance= $sender_query_balance - $total_transaction_cost;
 
-        //dd($transaction_amount);
+       // dd($total_transaction_cost,$new_receiver_balance,$new_sender_balance);
 
 
         //validate balance, transaction amount and sender vs receiver before the transaction
@@ -150,19 +158,17 @@ class RegisteredCustomersController extends Controller
             //begin laravel transaction
             DB::beginTransaction();
             try {
-
                 //update balance on customers table
-                DB::table('customers')->where('msisdn', $receiver_customer_id)->update(['topupamnt' => $new_receiver_balance]);
-                DB::table('customers')->where('msisdn', $sender_customer_id)->update(['topupamnt' => $new_sender_balance]);
-                $updated_sender_balance = DB::table('customers')->where('msisdn', '=', $sender_customer_id)->sum('topupamnt');
-
+                DB::table('customers')->where('user_id', $receiver_identity_id)->update(['topupamnt' => $new_receiver_balance]);
+                DB::table('customers')->where('user_id', $sender_identity_id)->update(['topupamnt' => $new_sender_balance]);
+                $updated_sender_balance = DB::table('customers')->where('user_id', '=', $sender_identity_id)->sum('topupamnt');
 
                 //update the record on transactions table
                 $input_transaction = [
                     'transaction_ref_id' => $randomId,
                     'transaction_ref_code' => $random,
-                    'customer_msisdn' => $sender_customer_id,
-                    'receiver_msisdn' => $receiver_customer_id,
+                    'sender_user_id' => $sender_identity_id,
+                    'receiver_user_id' => $receiver_identity_id,
                     'transaction_type_id' => $transaction_type_id,
                     'transaction_amount' => $transaction_amount,
                     'transaction_cost' => $transact_amount_cost,  //hardcoded for a start, to be extracted from the charge bands
@@ -175,26 +181,8 @@ class RegisteredCustomersController extends Controller
                 //dd($input_transaction);
                 DB::table('transactions')->insert($input_transaction);
 
-                //update the revenue table
-                $input_revenue = [
-                    'transaction_ref_id' => $randomId,
-                    'transaction_cost' => $transact_amount_cost,  //hardcoded for a start, to be extracted from the charge bands
-                    "created_at" =>  \Carbon\Carbon::now(), # new \Datetime()
-                    "updated_at" => \Carbon\Carbon::now()  # new \Datetime()
-                ];
-                DB::table('revenues')->insert($input_revenue);
-
                 //Notifications message
-                $notification = 'Kes'.' '.$transaction_amount.' '.'Sent to'.' 0'.$receiver_query_kyc.' Transaction cost is Kes '.$transact_amount_cost.'. Your account balance is Kes'.' '.$updated_sender_balance.'.';
-
-                //Update the notification table
-//                $input_notification = [
-//                    'transaction_ref_id' => $randomId,
-//                    'notification' => $notification
-//                ];
-//                DB::table('notifications')->create($input_notification);
-
-                //commit transactions if no exceptions
+                $notification = 'Kes'.' '.$transaction_amount.' '.'Sent to'.' '.$receiver_query_kyc.' Transaction cost is Kes '.$transact_amount_cost.'. Your account balance is Kes'.' '.$updated_sender_balance.'.';
 
                 DB::commit();
 

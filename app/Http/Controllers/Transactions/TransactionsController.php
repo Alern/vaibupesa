@@ -221,7 +221,7 @@ class TransactionsController extends Controller
     }
 
     public function showTransactions(){
-        $get_transactions = Transaction::all();
+        $get_transactions = Transaction::orderBy('created_at', 'DESC')->get();
         return view('pages.transact.view', compact('get_transactions'));
     }
 
@@ -240,29 +240,29 @@ class TransactionsController extends Controller
         $thisWeek = \Carbon\Carbon::now()->startofWeek();
         $thisMonth = \Carbon\Carbon::now()->startOfMonth();
 
-        $todayRevenue=DB::table('revenues')
+        $todayRevenue=DB::table('transactions')
             ->whereBetween('created_at', [$startOfToday, $now])
             ->sum('transaction_cost');
 
-        $yesterdayRevenue=DB::table('revenues')
+        $yesterdayRevenue=DB::table('transactions')
             ->whereBetween('created_at', [$yesterdayStartOfDay, $yesterdayEndOfDay])
             ->sum('transaction_cost');
 
-        $last7daysRevenue=DB::table('revenues')
+        $last7daysRevenue=DB::table('transactions')
             ->whereBetween('created_at', [$last7days, $now])
             ->sum('transaction_cost');
 
-        $thisWeekRevenue=DB::table('revenues')
+        $thisWeekRevenue=DB::table('transactions')
             ->whereBetween('created_at', [$thisWeek, $now])
             ->sum('transaction_cost');
 
-        $thisMonthRevenue=DB::table('revenues')
+        $thisMonthRevenue=DB::table('transactions')
             ->whereBetween('created_at', [$thisMonth, $now])
             ->sum('transaction_cost');
 
-        $totalRevenue=DB::table('revenues')->sum('transaction_cost');
+        $totalRevenue=DB::table('transactions')->sum('transaction_cost');
 
-        $get_revenue = Revenue::all();
+        $get_revenue = Transaction::orderBy('created_at', 'DESC')->get();
         return view('pages.revenue.view', compact('get_revenue','todayRevenue','yesterdayRevenue','last7daysRevenue','thisWeekRevenue','thisMonthRevenue','totalRevenue'));
     }
 

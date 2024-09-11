@@ -19,7 +19,8 @@ class Transaction extends Model
         'transaction_cost',
         'transaction_code',
         'sender_balance',
-        'receiver_balance'];
+        'receiver_balance',
+        'transaction_status'];
 }
 
 

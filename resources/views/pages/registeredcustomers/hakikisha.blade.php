@@ -36,8 +36,15 @@
             <input type="text" class="form-control" id='senderphone' name='senderphone' value="{{$inputs1}}" >
         </div>
 
+        <div class="form-group">
             <label for="inputAddress">Receiver Phone Number</label>
             <input type="text"  class="form-control" id='receiverphone' name='receiverphone' value="{{$inputs2}}" >
+        </div>
+
+        <div class="form-group">
+            <label for="inputAddress">Receiver Identity ID</label>
+            <input type="text"  class="form-control" id='receiveridentity' name='receiveridentity' value="{{$receiveruserid}}" >
+        </div>
 
         <div class="form-group">
             <label for="inputAddress2">Transaction Amount Kes</label>
@@ -48,13 +55,12 @@
                 <label for="inputCity">Transaction Cost Kes</label>
                 <input type="text" class="form-control" id='tcost' name='tcost' value="{{$hakikishatcost}}">
             </div>
-
         </div>
         <button type="submit" class="btn btn-primary">Continue</button>
     </form>
 
     <p>
-    <form class="cmxform" method="GET" action={{"/transactions/hakikisha/cancel"}}>
+    <form class="cmxform" method="GET" action={{"/registered/transactions/hakikisha/cancel"}}>
         @csrf
         <button type="submit" class="btn btn-danger">Cancel</button>
     </form>
