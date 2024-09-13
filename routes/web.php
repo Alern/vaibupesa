@@ -33,7 +33,7 @@ Route::get('/transactions/hakikisha/cancel',[\App\Http\Controllers\Transactions\
 Route::get('/notifications/view', [\App\Http\Controllers\Transactions\TransactionsController::class, 'showNotifications']);
 Route::get('/revenue/view', [\App\Http\Controllers\Transactions\TransactionsController::class, 'showRevenue']);
 
-Route::view('/registeredcustomers/create', 'pages.registeredcustomers.createregistered');
+Route::get('/registeredcustomers/create',[\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class,'showBalance']);
 Route::post('/registeredcustomers/store', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'create'])->name('/registeredcustomers/store');
 
 Route::view('/registered/transactions/hakikisha', 'pages.registeredcustomers.hakikisha');

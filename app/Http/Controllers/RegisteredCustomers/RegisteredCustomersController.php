@@ -101,6 +101,14 @@ class RegisteredCustomersController extends Controller
         return view('pages.registeredcustomers.createregistered');
     }
 
+
+    public function showBalance(){
+        $user = auth()->user();
+        $sender_identity_id=$user->id;
+        $sender_query_balance=DB::table('customers')->where('user_id', '=', $sender_identity_id)->pluck('topupamnt')->first();
+        return view('pages.registeredcustomers.createregistered', compact('sender_query_balance'));
+    }
+
     public function create(Request $request)
     {
 
@@ -115,8 +123,8 @@ class RegisteredCustomersController extends Controller
 
        // dd($sender_customer_id,$receiver_customer_id,$receiver_identity_id,$transaction_amount,$transact_amount_cost);
 
-        $sender_query_balance=DB::table('customers')->where('user_id', '=', $receiver_identity_id)->pluck('topupamnt')->first();
-        $receiver_query_balance=DB::table('customers')->where('user_id', '=', $sender_identity_id)->pluck('topupamnt')->first();
+        $sender_query_balance=DB::table('customers')->where('user_id', '=', $sender_identity_id)->pluck('topupamnt')->first();
+        $receiver_query_balance=DB::table('customers')->where('user_id', '=', $receiver_identity_id)->pluck('topupamnt')->first();
 
         //dd($sender_query_balance, $receiver_query_balance);
 
@@ -215,9 +223,27 @@ class RegisteredCustomersController extends Controller
         $transactions=DB::table('transactions')->where('sender_user_id', '=', $phone_id)->
         orWhere('receiver_user_id', '=', $phone_id)->whereBetween('created_at', [$sdate, $edate])->get();
 
-        //dd($transactions);
+        $otherpartyid1=DB::table('transactions')->where('sender_user_id', '=', $phone_id)->pluck('receiver_user_id')->first();
+        $otherpartyid2=DB::table('transactions')->where('receiver_user_id', '=', $phone_id)->pluck('sender_user_id')->first();
 
-        return view('pages.registeredcustomers.statementsresults', compact('transactions','phone','sdate','edate','fname','lname'));
+        $senderfname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('fname')->first();
+        $senderlname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('lname')->first();
+        $receiverfname=DB::table('customers')->where('user_id', '=', $otherpartyid1)->
+        orWhere('user_id', '=', $otherpartyid2)->pluck('fname')->first();
+        $receiverlname=DB::table('customers')->where('user_id', '=', $otherpartyid1)->
+        orWhere('user_id', '=', $otherpartyid2)->pluck('lname')->first();
+
+        $transactiontypeid=DB::table('transactions')->where('sender_user_id', '=', $phone)->
+        orWhere('receiver_user_id', '=', $phone_id)->pluck('transaction_type_id')->first();
+
+        $transactionname=DB::table('transaction_types')->where('id', '=', $transactiontypeid)->
+        pluck('tname')->first();
+
+        $otherpartymsisdn=DB::table('users')->where('id', '=', $otherpartyid1)->
+        orWhere('id', '=', $otherpartyid2)->pluck('msisdn')->first();
+
+        return view('pages.registeredcustomers.statementsresults', compact('transactions','phone','sdate','edate','fname','lname',
+            'senderfname','senderlname','receiverfname','receiverlname','transactionname','otherpartymsisdn'));
     }
 
 }

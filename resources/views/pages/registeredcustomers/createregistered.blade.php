@@ -11,6 +11,8 @@
 
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Transact | Send Money</p>
 
+                                <p class="text-center h3 fw-bold mb-5 mx-1 mx-md-4 mt-4">Wallet: Kes.{{$sender_query_balance}}</p>
+
                                 <form class="cmxform" method="POST"  action={{"/rtransactions/hakikisha/validate"}}>
                                     @csrf
 

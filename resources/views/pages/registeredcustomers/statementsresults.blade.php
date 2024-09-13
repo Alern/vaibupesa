@@ -15,10 +15,8 @@
         <td>transaction_amount</td>
         <td>transaction_cost</td>
         <td>sender_balance</td>
-        <td>transaction_code</td>
         <td>receiver_balance</td>
         <td>created_at</td>
-        <td>updated_at</td>
     </tr>
     </thead>
     <tbody>
@@ -26,16 +24,16 @@
         <tr>
             <td>{{ $transaction->transaction_ref_id }}</td>
             <td>{{ $transaction->transaction_ref_code }}</td>
-            <td>{{ $transaction->sender_user_id }}</td>
-            <td>Ksh.{{ $transaction->receiver_user_id }}</td>
-            <td>Ksh.{{ $transaction->transaction_type_id }}</td>
+{{--            <td>{{ $transaction->sender_user_id }}</td>--}}
+            <td>{{$phone}},{{ $senderfname }} {{$senderlname}}</td>
+{{--            <td>{{ $transaction->receiver_user_id }}</td>--}}
+            <td>{{$otherpartymsisdn}},{{ $receiverfname }} {{$receiverlname}}</td>
+            <td>{{ $transactionname }}</td>
             <td>Ksh.{{ $transaction->transaction_amount }}</td>
             <td>Ksh.{{ $transaction->transaction_cost }}</td>
-            <td>{{ $transaction->sender_balance }}</td>
-            <td>{{ $transaction->transaction_code }}</td>
-            <td>{{ $transaction->receiver_balance }}</td>
+            <td>Ksh.{{ $transaction->sender_balance }}</td>
+            <td>Ksh.{{ $transaction->receiver_balance }}</td>
             <td>{{ $transaction->created_at }}</td>
-            <td>{{ $transaction->updated_at }}</td>
         </tr>
     @endforeach
     </tbody>
