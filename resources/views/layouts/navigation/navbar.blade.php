@@ -27,24 +27,12 @@
 
 <section>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+    <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
         <!-- Container wrapper -->
         <div class="container-fluid">
-            <!-- Toggle button -->
-            <button
-                data-mdb-collapse-init
-                class="navbar-toggler"
-                type="button"
-                data-mdb-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
-            >
-                <i class="fas fa-bars"></i>
-            </button>
             <!-- Collapsible wrapper -->
             <div class="collapse navbar-collapse align-items-center justify-content-center" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <ul class="list-inline d-flex justify-content-center">
                     <li class="nav-item">
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -46,6 +46,18 @@ Route::post('/registered/updatekyc/store', [\App\Http\Controllers\RegisteredCust
 Route::view('/registered/statements', 'pages.registeredcustomers.statements');
 Route::post('/registered/statements/search', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'statements'])->name('/registered/statements/search');
 
+
+//Templates for admin and customer
+Route::view('/admin/dashboard', 'layouts.dashboard.dashboardadmin');
+Route::view('/cust/dashboard', 'layouts.dashboard.dashboardcust');
+
+
+//Landing page for customer
+Route::view('/registered/landingpage', 'pages.registeredcustomers.landing');
+
+
+
+
 Auth::routes();
 Route::post('/logintry',[\App\Http\Controllers\Auth\LoginController::class,'authenticate'])->name('/logintry');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
