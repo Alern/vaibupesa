@@ -54,6 +54,7 @@ Route::view('/cust/dashboard', 'layouts.dashboard.dashboardcust');
 
 //Landing page for customer
 Route::view('/registered/landingpage', 'pages.registeredcustomers.landing');
+Route::view('/registered/nokyclandingpage', 'pages.registeredcustomers.nokyclanding');
 
 
 

@@ -7,6 +7,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LoginController extends Controller
 {
@@ -31,7 +32,18 @@ class LoginController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended('/registeredcustomers/create');
+            //Check for landing page
+            $user = auth()->user();
+            $inputs1=$user->id;
+            $loggedinuserid=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('id')->first();
+
+            if(is_null($loggedinuserid) ){
+               // return redirect()->intended('/registeredcustomers/create');
+                return redirect()->intended('/registered/nokyclandingpage');
+            }else{
+                return redirect()->intended('/registered/landingpage');
+            }
+
         }
 
         return back()->withErrors([

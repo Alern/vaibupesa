@@ -7,6 +7,7 @@
         <div class="card-body">
             <h5 class="card-title">Welcome Username!!</h5>
             <p class="card-text">Update your KYC Below to Transact.</p>
+            <a href="#" class="btn btn-primary">Update KYC</a>
             <a href="#" class="btn btn-primary">Transact</a>
         </div>
     </div>
