@@ -17,6 +17,18 @@ use Illuminate\Support\Str;
 
 class RegisteredCustomersController extends Controller
 {
+    public function redirectUnregisteredTxn(){
+        $user = auth()->user();
+        $inputs1=$user->id;
+        $loggedinuserid=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('id')->first();
+
+        if(is_null($loggedinuserid) ){
+            return back()->with('error', 'Update your KYC to transact!');
+        }else
+        {return redirect()->intended('/registeredcustomers/create');
+        }
+    }
+
     public function sendRegistered(Request $request){
         $user = auth()->user();
         $inputs1=$user->msisdn;
@@ -69,7 +81,7 @@ class RegisteredCustomersController extends Controller
             'idno' => 'required',
             'gender' => 'required',
             'reglocation' => 'required',
-            'topupamnt' => 'required'
+            //'topupamnt' => 'required'
         );
         $validator = Validator::make($request->all(), $rules);
 
@@ -89,7 +101,7 @@ class RegisteredCustomersController extends Controller
             $customer->idno = $request->idno;
             $customer->gender = $request->gender;
             $customer->reglocation = $request->reglocation;
-            $customer->topupamnt = $request->topupamnt;
+            //$customer->topupamnt = $request->topupamnt;
             $customer->save();
             // redirect
             Session::flash('message', 'Successfully updated your KYC! You can proceed to transact!!!');
@@ -100,7 +112,6 @@ class RegisteredCustomersController extends Controller
     public function hakikishaCancel(){
         return view('pages.registeredcustomers.createregistered');
     }
-
 
     public function showBalance(){
         $user = auth()->user();

@@ -7,8 +7,25 @@
         <div class="card-body">
             <h5 class="card-title">Welcome Username!!</h5>
             <p class="card-text">Update your KYC Below to Transact.</p>
-            <a href="#" class="btn btn-primary">Update KYC</a>
-            <a href="#" class="btn btn-primary">Transact</a>
+            <form class="cmxform" method="GET"  action={{"/registered/updatekyc"}}>
+                @csrf
+                @include('layouts.includes.session_flash')
+                <button type="submit"
+                        class="btn btn-primary btn-sm"
+                        id="submit" value="submit">
+                    Update KYC
+                </button>
+            </form> <p></p>
+
+            <form class="cmxform" method="GET"  action={{"/registeredcustomers/create"}}>
+                @csrf
+                @include('layouts.includes.session_flash')
+                <button type="submit"
+                        class="btn btn-primary btn-sm"
+                        id="submit" value="submit">
+                    Transact
+                </button>
+            </form>
         </div>
     </div>
 

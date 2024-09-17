@@ -56,6 +56,8 @@ Route::view('/cust/dashboard', 'layouts.dashboard.dashboardcust');
 Route::view('/registered/landingpage', 'pages.registeredcustomers.landing');
 Route::view('/registered/nokyclandingpage', 'pages.registeredcustomers.nokyclanding');
 
+//Landing redirecting updateKYC & Transact for KYC Updated and Non-KYC Updated.
+Route::post('/nokyclanding/txn/verify', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'redirectUnregisteredTxn'])->name('/nokyclanding/txn/verify');
 
 
 
