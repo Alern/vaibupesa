@@ -109,6 +109,25 @@ class RegisteredCustomersController extends Controller
         }
     }
 
+    public function adminDash(){
+        $balUpdate=DB::table('customers')->whereNull('topupamnt')->get();
+        return view('layouts.dashboard.dashboardadmin', compact('balUpdate'));
+    }
+
+    public function editBalance($id)
+    {
+        $customer = Customer::find($id);
+        return view('pages.registeredcustomers.updatebalance', compact('customer'));
+    }
+
+    public function updateBalance(Request $request, $id)
+    {
+        $customer = Customer::find($id);
+        $customer->topupamnt= $request->input('topupamnt');
+        $customer->update();
+        return redirect()->back()->with('status','Customer Balance Updated Successfully');
+    }
+
     public function hakikishaCancel(){
         return view('pages.registeredcustomers.createregistered');
     }

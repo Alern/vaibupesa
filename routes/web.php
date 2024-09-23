@@ -48,7 +48,7 @@ Route::post('/registered/statements/search', [\App\Http\Controllers\RegisteredCu
 
 
 //Templates for admin and customer
-Route::view('/admin/dashboard', 'layouts.dashboard.dashboardadmin');
+Route::get('/admin/dashboard', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'adminDash']);
 Route::view('/cust/dashboard', 'layouts.dashboard.dashboardcust');
 
 
@@ -59,6 +59,9 @@ Route::view('/registered/nokyclandingpage', 'pages.registeredcustomers.nokycland
 //Landing redirecting updateKYC & Transact for KYC Updated and Non-KYC Updated.
 Route::post('/nokyclanding/txn/verify', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'redirectUnregisteredTxn'])->name('/nokyclanding/txn/verify');
 
+//admin update customer balance
+Route::get('updateCustBal/{id}', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'editBalance']);
+Route::put('updateBal/{id}', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'updateBalance']);
 
 
 Auth::routes();
