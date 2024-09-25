@@ -35,9 +35,9 @@ class LoginController extends Controller
             //Check for landing page
             $user = auth()->user();
             $inputs1=$user->id;
-            $loggedinuserid=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('id')->first();
+            $loggedinuserbal=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('topupamnt')->first();
 
-            if(is_null($loggedinuserid) ){
+            if(is_null($loggedinuserbal) ){
                // return redirect()->intended('/registeredcustomers/create');
                 return redirect()->intended('/registered/nokyclandingpage');
             }else{

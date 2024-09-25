@@ -20,12 +20,12 @@ class RegisteredCustomersController extends Controller
     public function redirectUnregisteredTxn(){
         $user = auth()->user();
         $inputs1=$user->id;
-        $loggedinuserid=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('id')->first();
+        $loggedinuserbal=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('topupamnt')->first();
 
-        if(is_null($loggedinuserid) ){
-            return back()->with('error', 'Update your KYC to transact!');
+        if(is_null($loggedinuserbal) ){
+                return back()->with('error', 'Your admin needs to update your balance for you to transact!');
         }else
-        {return redirect()->intended('/registeredcustomers/create');
+        {return redirect()->intended('/registeredcustomers/creat');
         }
     }
 
@@ -103,15 +103,31 @@ class RegisteredCustomersController extends Controller
             $customer->reglocation = $request->reglocation;
             //$customer->topupamnt = $request->topupamnt;
             $customer->save();
+
             // redirect
-            Session::flash('message', 'Successfully updated your KYC! You can proceed to transact!!!');
-            return Redirect::to('/registeredcustomers/create');
+            $user_bal=DB::table('customers')->where('user_id', '=', $userid)->pluck('topupamnt')->first();
+
+            if(is_null($user_bal)){
+                Session::flash('message', 'Successfully updated your KYC!');
+                return Redirect::to('/registered/nokyclandingpage');
+            }
+            else{
+                Session::flash('message', 'Successfully updated your KYC!');
+                return Redirect::to('/registered/landingpage');
+            }
+
         }
     }
 
     public function adminDash(){
+        $totalCash= DB::table('customers')->sum('topupamnt');
+        $totalRevenue=DB::table('transactions')->sum('transaction_cost');
+        $totalTxnCount=DB::table('transactions')->count();
+        $totalCustCount=DB::table('customers')->count();
+
         $balUpdate=DB::table('customers')->whereNull('topupamnt')->get();
-        return view('layouts.dashboard.dashboardadmin', compact('balUpdate'));
+        return view('layouts.dashboard.dashboardadmin', compact('balUpdate',
+            'totalCash','totalRevenue','totalTxnCount','totalCustCount'));
     }
 
     public function editBalance($id)
