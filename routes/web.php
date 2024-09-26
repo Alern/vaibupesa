@@ -40,7 +40,7 @@ Route::view('/registered/transactions/hakikisha', 'pages.registeredcustomers.hak
 Route::post('/rtransactions/hakikisha/validate', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'sendRegistered'])->name('/rtransactions/hakikisha/validate');
 Route::get('/registered/transactions/hakikisha/cancel',[\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'hakikishaCancel'])->name('/registered/transactions/hakikisha/cancel');
 
-Route::view('/registered/updatekyc', 'pages.registeredcustomers.updatekyc');
+Route::get('/registered/updatekyc', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class,'editKyc']);
 Route::post('/registered/updatekyc/store', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'updateKyc'])->name('/registered/updatekyc/store');
 
 Route::view('/registered/statements', 'pages.registeredcustomers.statements');
@@ -54,7 +54,7 @@ Route::view('/cust/dashboard', 'layouts.dashboard.dashboardcust');
 
 //Landing page for customer
 Route::view('/registered/landingpage', 'pages.registeredcustomers.landing');
-Route::view('/registered/nokyclandingpage', 'pages.registeredcustomers.nokyclanding');
+Route::get('/registered/nokyclandingpage', [App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'noKycLanding']);
 
 //Landing redirecting updateKYC & Transact for KYC Updated and Non-KYC Updated.
 Route::post('/nokyclanding/txn/verify', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'redirectUnregisteredTxn'])->name('/nokyclanding/txn/verify');

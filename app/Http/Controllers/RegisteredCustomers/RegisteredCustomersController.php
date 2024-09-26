@@ -73,6 +73,19 @@ class RegisteredCustomersController extends Controller
         }
     }
 
+    public function noKycLanding(){
+        $user = auth()->user();
+        $userid=$user->id;
+        return view('pages.registeredcustomers.nokyclanding', compact('userid'));
+    }
+
+    public function editKyc(){
+        $user = auth()->user();
+        $userid=$user->id;
+        $loggedinuserdetails=DB::table('customers')->where('user_id', '=', $userid)->first();
+
+        return view('pages.registeredcustomers.updatekyc', compact('loggedinuserdetails'));
+    }
     public function updateKyc(Request $request){
         $rules = array(
             'fname' => 'required',
