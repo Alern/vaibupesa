@@ -36,7 +36,7 @@ class RegisteredCustomersController extends Controller
 
         $rules = array(
             'receiverMsisdn' => 'required',
-            'amount' => 'required',
+            'amount' => 'required|numeric',
             'password' => 'required',
         );
 
