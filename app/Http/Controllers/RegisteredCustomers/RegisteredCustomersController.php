@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\TransactionType;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -23,12 +24,11 @@ class RegisteredCustomersController extends Controller
         $loggedinuserbal=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('topupamnt')->first();
 
         if(is_null($loggedinuserbal) ){
-                return back()->with('error', 'Your admin needs to update your balance for you to transact!');
+                return back()->with('error', 'Our Admins are working on updating your balance, please be patient.');
         }else
         {return redirect()->intended('/registeredcustomers/creat');
         }
     }
-
     public function sendRegistered(Request $request){
         $user = auth()->user();
         $inputs1=$user->msisdn;
@@ -72,21 +72,38 @@ class RegisteredCustomersController extends Controller
             return back()->with('error', 'The provided customer details do not match our records.')->withInput();
         }
     }
+    public function kycLanding(){
+        $user = auth()->user();
+        $userid=$user->id;
 
+        $current = Carbon::now();
+        $startOfWeek = Carbon::now()->startOfWeek();
+
+        $accountBal=DB::table('customers')->where('user_id', '=', $userid)->pluck('topupamnt')->first();
+        $transactedToday=DB::table('transactions')->where('sender_user_id', '=', $userid)->
+        orWhere('receiver_user_id', '=', $userid)->whereBetween('created_at', [$current, $startOfWeek])->count();
+
+       // dd($transactedToday);
+
+        return view('pages.registeredcustomers.landing', compact('accountBal','transactedToday'));
+    }
     public function noKycLanding(){
         $user = auth()->user();
         $userid=$user->id;
         return view('pages.registeredcustomers.nokyclanding', compact('userid'));
     }
-
     public function editKyc(){
         $user = auth()->user();
         $userid=$user->id;
         $loggedinuserdetails=DB::table('customers')->where('user_id', '=', $userid)->first();
 
-        return view('pages.registeredcustomers.updatekyc', compact('loggedinuserdetails'));
+        if(is_null($loggedinuserdetails)){
+            return view('pages.registeredcustomers.updatekycnew', compact('loggedinuserdetails'));
+        }else{
+            return view('pages.registeredcustomers.updatekyc', compact('loggedinuserdetails'));
+        }
     }
-    public function updateKyc(Request $request){
+    public function updateKycnew(Request $request){
         $rules = array(
             'fname' => 'required',
             'lname' => 'required',
@@ -128,10 +145,26 @@ class RegisteredCustomersController extends Controller
                 Session::flash('message', 'Successfully updated your KYC!');
                 return Redirect::to('/registered/landingpage');
             }
-
         }
     }
+    public function updateKyc(Request $request){
 
+        $user = auth()->user();
+        $inputs1=$user->id;
+
+            $customer = Customer::find($inputs1);
+            $customer->user_id= $inputs1;
+            $customer->fname= $request->input('fname');
+            $customer->lname= $request->input('lname');
+            $customer->email= $request->input('email');
+            $customer->idno= $request->input('idno');
+            $customer->gender= $request->input('gender');
+            $customer->reglocation= $request->input('reglocation');
+            $customer->update();
+
+        Session::flash('message', 'Successfully updated your KYC!');
+        return Redirect::to('/registered/landingpage');
+    }
     public function adminDash(){
         $totalCash= DB::table('customers')->sum('topupamnt');
         $totalRevenue=DB::table('transactions')->sum('transaction_cost');
@@ -142,13 +175,11 @@ class RegisteredCustomersController extends Controller
         return view('layouts.dashboard.dashboardadmin', compact('balUpdate',
             'totalCash','totalRevenue','totalTxnCount','totalCustCount'));
     }
-
     public function editBalance($id)
     {
         $customer = Customer::find($id);
         return view('pages.registeredcustomers.updatebalance', compact('customer'));
     }
-
     public function updateBalance(Request $request, $id)
     {
         $customer = Customer::find($id);

@@ -6,8 +6,8 @@
 
     <div class="card text-center">
         <div class="card-body">
-            <h5 class="card-title">Welcome Username!!</h5>
-            <p class="card-text">Update your KYC Below to Transact.</p>
+            <h5 class="card-title">Welcome To Vaibupesa</h5>
+            <p class="card-text">Update your KYC below as our Admins work to update your balance for you to transact.</p>
             <form class="cmxform" method="GET"  action={{"/registered/updatekyc"}}>
                 @csrf
                 @include('layouts.includes.session_flash')
@@ -27,6 +27,7 @@
                 </button>
             </form>
         </div>
+        <p class="card-text">Our Services:</p>
     </div>
 
 
@@ -40,8 +41,8 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Account Balance</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                SEND MONEY</div>
+
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-calendar fa-2x text-gray-300"></i>
@@ -58,8 +59,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Amount Transacted Today</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                PAYBILL</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
@@ -75,8 +75,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                Amount Transacted This Week</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                BUY GOODS</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-comments fa-2x text-gray-300"></i>
@@ -94,8 +93,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                Amount Transacted This Month</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                STATEMENTS</div>
                         </div>
                         <div class="col-auto">
                             <i class="fas fa-comments fa-2x text-gray-300"></i>

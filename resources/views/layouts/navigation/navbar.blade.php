@@ -69,6 +69,16 @@
                             </div>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dashboard
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <a class="dropdown-item" href="/admin/dashboard">Go to dashboard</a>
+                            </div>
+                        </div>
+                    </li>
                 </ul>
             </div>
         </div>

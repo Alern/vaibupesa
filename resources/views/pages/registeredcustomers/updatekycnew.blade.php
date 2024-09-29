@@ -11,7 +11,7 @@
                             <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
                                 <p class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Welcome! Update KYC</p>
 
-                                <form class="mx-1 mx-md-4" method="POST" action={{route('/registered/updatekyc/store')}}>
+                                <form class="mx-1 mx-md-4" method="POST" action={{route('/registered/updatekycnew/store')}}>
 
                                     @csrf
 
@@ -20,7 +20,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input type="text" id="form3Example1c" value="{{$loggedinuserdetails->fname}}" name='fname' class="form-control"/>
+                                            <input type="text" id="form3Example1c" name='fname' class="form-control"/>
                                             <label class="form-label" for="form3Example1c">First Name</label>
                                         </div>
                                     </div>
@@ -28,7 +28,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input type="text" id="form3Example1c" value="{{$loggedinuserdetails->lname}}" name='lname' class="form-control"/>
+                                            <input type="text" id="form3Example1c" name='lname' class="form-control"/>
                                             <label class="form-label" for="form3Example1c">Last Name</label>
                                         </div>
                                     </div>
@@ -36,7 +36,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input type="email" id="form3Example3c" value="{{$loggedinuserdetails->email}}" name='email' class="form-control"/>
+                                            <input type="email" id="form3Example3c" name='email' class="form-control"/>
                                             <label class="form-label" for="form3Example3c">Email</label>
                                         </div>
                                     </div>
@@ -44,7 +44,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input type="text" id="form3Example1c" value="{{$loggedinuserdetails->idno}}" name='idno' class="form-control"/>
+                                            <input type="text" id="form3Example1c"  name='idno' class="form-control"/>
                                             <label class="form-label" for="form3Example1c">ID Number</label>
                                         </div>
                                     </div>
@@ -52,7 +52,7 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input type="text" id="form3Example1c" value="{{$loggedinuserdetails->gender}}" name='gender' class="form-control"/>
+                                            <input type="text" id="form3Example1c"  name='gender' class="form-control"/>
                                             <label class="form-label" for="form3Example1c">Gender</label>
                                         </div>
                                     </div>
@@ -60,20 +60,11 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input type="text" id="form3Example1c" value="{{$loggedinuserdetails->reglocation}}" name='reglocation'
+                                            <input type="text" id="form3Example1c" name='reglocation'
                                                    class="form-control"/>
                                             <label class="form-label" for="form3Example1c">Registration Location</label>
                                         </div>
                                     </div>
-
-{{--                                    <div class="d-flex flex-row align-items-center mb-4">--}}
-{{--                                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>--}}
-{{--                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">--}}
-{{--                                            <input type="text" id="form3Example1c" name='topupamnt'--}}
-{{--                                                   class="form-control"/>--}}
-{{--                                            <label class="form-label" for="form3Example1c">TopUp Amount</label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
 
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                         <button type="submit" data-mdb-button-init data-mdb-ripple-init
@@ -98,4 +89,5 @@
         </div>
     </div>
 </section>
+
 
