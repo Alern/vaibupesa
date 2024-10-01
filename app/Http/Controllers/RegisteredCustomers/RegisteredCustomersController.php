@@ -23,10 +23,10 @@ class RegisteredCustomersController extends Controller
         $inputs1=$user->id;
         $loggedinuserbal=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('topupamnt')->first();
 
-        if(is_null($loggedinuserbal) ){
-                return back()->with('error', 'Our Admins are working on updating your balance, please be patient.');
+        if($loggedinuserbal == 0){
+                return back()->with('error', 'Our Admins are working on updating your balance for you to transact, please be patient.');
         }else
-        {return redirect()->intended('/registeredcustomers/creat');
+        {return redirect()->intended('/registeredcustomers/create');
         }
     }
     public function sendRegistered(Request $request){
@@ -131,7 +131,7 @@ class RegisteredCustomersController extends Controller
             $customer->idno = $request->idno;
             $customer->gender = $request->gender;
             $customer->reglocation = $request->reglocation;
-            //$customer->topupamnt = $request->topupamnt;
+            $customer->topupamnt = 0;
             $customer->save();
 
             // redirect
@@ -150,17 +150,25 @@ class RegisteredCustomersController extends Controller
     public function updateKyc(Request $request){
 
         $user = auth()->user();
-        $inputs1=$user->id;
+        (int)$inputs1=$user->id;
 
-            $customer = Customer::find($inputs1);
-            $customer->user_id= $inputs1;
-            $customer->fname= $request->input('fname');
-            $customer->lname= $request->input('lname');
-            $customer->email= $request->input('email');
-            $customer->idno= $request->input('idno');
-            $customer->gender= $request->input('gender');
-            $customer->reglocation= $request->input('reglocation');
-            $customer->update();
+        $loggedinuserdetails=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('id')->first();
+      // dd($loggedinuserdetails);
+
+            $customer = Customer::find($loggedinuserdetails);
+           // $loggedinuserdetails=DB::table('customers')->where('user_id', '=', $inputs1)->limit(1);
+
+           //dd($customer);
+           // $customer->user_id= $user->id;
+        $customer->fname= $request->input('fname');
+        $customer->lname= $request->input('lname');
+        $customer->email= $request->input('email');
+        $customer->idno= $request->input('idno');
+        $customer->gender= $request->input('gender');
+        $customer->reglocation= $request->input('reglocation');
+        $customer->update();
+
+      //  DB::table('customers')->insert($loggedinuserdetails);
 
         Session::flash('message', 'Successfully updated your KYC!');
         return Redirect::to('/registered/landingpage');
@@ -187,18 +195,15 @@ class RegisteredCustomersController extends Controller
         $customer->update();
         return redirect()->back()->with('status','Customer Balance Updated Successfully');
     }
-
     public function hakikishaCancel(){
         return view('pages.registeredcustomers.createregistered');
     }
-
     public function showBalance(){
         $user = auth()->user();
         $sender_identity_id=$user->id;
         $sender_query_balance=DB::table('customers')->where('user_id', '=', $sender_identity_id)->pluck('topupamnt')->first();
         return view('pages.registeredcustomers.createregistered', compact('sender_query_balance'));
     }
-
     public function create(Request $request)
     {
 
@@ -296,7 +301,6 @@ class RegisteredCustomersController extends Controller
             }
         }
     }
-
     public function statements(Request $request){
 
         $phone = $request->input('phone');

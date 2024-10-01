@@ -60,20 +60,25 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
+                                            <label class="form-label" for="form3Example1c">Gender</label>
+                                            <select class="form-select" aria-label="Default select example"
+                                                    name='gender'>
+                                                <option selected>Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
+                                                <option value="LGBTQIH+">LGBTQIH+</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>
+                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">
                                             <input type="text" id="form3Example1c" value="{{$loggedinuserdetails->reglocation}}" name='reglocation'
                                                    class="form-control"/>
                                             <label class="form-label" for="form3Example1c">Registration Location</label>
                                         </div>
                                     </div>
-
-{{--                                    <div class="d-flex flex-row align-items-center mb-4">--}}
-{{--                                        <i class="fas fa-user fa-lg me-3 fa-fw"></i>--}}
-{{--                                        <div data-mdb-input-init class="form-outline flex-fill mb-0">--}}
-{{--                                            <input type="text" id="form3Example1c" name='topupamnt'--}}
-{{--                                                   class="form-control"/>--}}
-{{--                                            <label class="form-label" for="form3Example1c">TopUp Amount</label>--}}
-{{--                                        </div>--}}
-{{--                                    </div>--}}
 
                                     <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                                         <button type="submit" data-mdb-button-init data-mdb-ripple-init

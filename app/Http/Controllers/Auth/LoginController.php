@@ -37,7 +37,7 @@ class LoginController extends Controller
             $inputs1=$user->id;
             $loggedinuserbal=DB::table('customers')->where('user_id', '=', $inputs1)->pluck('topupamnt')->first();
 
-            if(is_null($loggedinuserbal) ){
+            if($loggedinuserbal == 0 ){
                // return redirect()->intended('/registeredcustomers/create');
                 return redirect()->intended('/registered/nokyclandingpage');
             }else{
