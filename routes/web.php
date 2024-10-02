@@ -44,9 +44,11 @@ Route::get('/registered/updatekyc', [\App\Http\Controllers\RegisteredCustomers\R
 Route::post('/registered/updatekycnew/store', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'updateKycnew'])->name('/registered/updatekycnew/store');
 Route::post('/registered/updatekyc/store', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'updateKyc'])->name('/registered/updatekyc/store');
 
-Route::view('/registered/statements', 'pages.registeredcustomers.statements');
-Route::post('/registered/statements/search', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'statements'])->name('/registered/statements/search');
-
+//Statements
+Route::view('/registered/statements', 'pages.statements.statements');
+Route::post('/registered/statements/search', [\App\Http\Controllers\Statements\StatementsController::class, 'statements'])->name('/registered/statements/search');
+Route::view('/registered/selfstatements', 'pages.statements.selfstatements');
+Route::post('/registered/selfstatements/search', [\App\Http\Controllers\Statements\StatementsController::class, 'statementsForSelf'])->name('/registered/selfstatements/search');
 
 //Templates for admin and customer
 Route::get('/admin/dashboard', [\App\Http\Controllers\RegisteredCustomers\RegisteredCustomersController::class, 'adminDash']);

@@ -65,7 +65,8 @@
                                 Statements
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <a class="dropdown-item" href="/registered/statements">Beta Version!</a>
+                            <a class="dropdown-item" href="/registered/selfstatements">Self</a>
+                                <a class="dropdown-item" href="/registered/statements">For Others</a>
                             </div>
                         </div>
                     </li>

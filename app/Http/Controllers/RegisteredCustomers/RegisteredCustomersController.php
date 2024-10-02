@@ -107,7 +107,7 @@ class RegisteredCustomersController extends Controller
         $rules = array(
             'fname' => 'required',
             'lname' => 'required',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:customers',
             'idno' => 'required',
             'gender' => 'required',
             'reglocation' => 'required',
@@ -116,9 +116,9 @@ class RegisteredCustomersController extends Controller
         $validator = Validator::make($request->all(), $rules);
 
         if ($validator->fails()) {
-            Session::flash('error', 'Validation failed, check your input!!!');
-            return Redirect::to('/registered/updatekyc')
-                ->withErrors($validator);
+            return Redirect::to('/registered/updatekyc')->withInput()->withErrors($validator);
+          //  return back()->withInput()->withErrors($validator);
+
         } else {
             // store
             $user = auth()->user();
@@ -172,6 +172,7 @@ class RegisteredCustomersController extends Controller
 
         Session::flash('message', 'Successfully updated your KYC!');
         return Redirect::to('/registered/landingpage');
+
     }
     public function adminDash(){
         $totalCash= DB::table('customers')->sum('topupamnt');
@@ -301,43 +302,6 @@ class RegisteredCustomersController extends Controller
             }
         }
     }
-    public function statements(Request $request){
 
-        $phone = $request->input('phone');
-        $sdate = $request->input('startdate');
-        $edate = $request->input('enddate');
-
-        //dd($phone, $sdate, $edate);
-
-        $phone_id=DB::table('users')->where('msisdn', '=', $phone)->pluck('id')->first();
-
-        $fname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('fname')->first();
-        $lname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('lname')->first();
-
-        $transactions=DB::table('transactions')->where('sender_user_id', '=', $phone_id)->
-        orWhere('receiver_user_id', '=', $phone_id)->whereBetween('created_at', [$sdate, $edate])->get();
-
-        $otherpartyid1=DB::table('transactions')->where('sender_user_id', '=', $phone_id)->pluck('receiver_user_id')->first();
-        $otherpartyid2=DB::table('transactions')->where('receiver_user_id', '=', $phone_id)->pluck('sender_user_id')->first();
-
-        $senderfname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('fname')->first();
-        $senderlname=DB::table('customers')->where('user_id', '=', $phone_id)->pluck('lname')->first();
-        $receiverfname=DB::table('customers')->where('user_id', '=', $otherpartyid1)->
-        orWhere('user_id', '=', $otherpartyid2)->pluck('fname')->first();
-        $receiverlname=DB::table('customers')->where('user_id', '=', $otherpartyid1)->
-        orWhere('user_id', '=', $otherpartyid2)->pluck('lname')->first();
-
-        $transactiontypeid=DB::table('transactions')->where('sender_user_id', '=', $phone)->
-        orWhere('receiver_user_id', '=', $phone_id)->pluck('transaction_type_id')->first();
-
-        $transactionname=DB::table('transaction_types')->where('id', '=', $transactiontypeid)->
-        pluck('tname')->first();
-
-        $otherpartymsisdn=DB::table('users')->where('id', '=', $otherpartyid1)->
-        orWhere('id', '=', $otherpartyid2)->pluck('msisdn')->first();
-
-        return view('pages.registeredcustomers.statementsresults', compact('transactions','phone','sdate','edate','fname','lname',
-            'senderfname','senderlname','receiverfname','receiverlname','transactionname','otherpartymsisdn'));
-    }
 
 }

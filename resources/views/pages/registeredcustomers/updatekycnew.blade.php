@@ -36,8 +36,13 @@
                                     <div class="d-flex flex-row align-items-center mb-4">
                                         <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                                         <div data-mdb-input-init class="form-outline flex-fill mb-0">
-                                            <input type="email" id="form3Example3c" name='email' class="form-control"/>
+                                            <input type="email" id="form3Example3c" name='email' class="form-control"
+                                                   class="@error('email') is-invalid @enderror"/>
                                             <label class="form-label" for="form3Example3c">Email</label>
+
+                                            @error('email')
+                                            <div class="alert alert-danger">{{ $message }}</div>
+                                            @enderror
                                         </div>
                                     </div>
 
